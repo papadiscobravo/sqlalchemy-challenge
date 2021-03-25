@@ -24,10 +24,10 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 
 # save reference to the table
-Weather = Base.classes.weather
+Weather = Base.classes.measurement
 
 # create an app
-app = Flask(__name__)
+app = Flask(__name__)   
 
 # list routes
 # /
@@ -35,22 +35,21 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     print("Server received request for HW10-Hawaii weather home page...")
-    return "Welcome to the HW10-Hawaii weather home page!"
+    return "Welcome to the HW10-Hawaii weather home page."
 
-    @app.route("/about")
+@app.route("/about")
 def about():
     print("Server received request for 'About' page...")
-    return "Welcome to my 'About' page!"
+    return "Welcome to my 'About' page."
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
+#
+#
+#
 #   List all routes that are available.
 
 # /api/v1.0/precipitation
 weather_dict = {
-    "date": []
+    "date": [],
     "prcp": []
     }
 
@@ -64,6 +63,23 @@ def jsonified():
 
 #   Convert the query results to a dictionary using date as the key and prcp as the value.
 #   Return the JSON representation of your dictionary.
+
+@app.route("/api/v1.0/weather")
+def weather():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    weather_results = session.query(weather_dict.name).all()
+
+    all_names = list(np.ravel(results))
+
+    return jsonify(all_names)
+
+    session.close()
+
+
+
+
 
 # /api/v1.0/stations
 #   Return a JSON list of stations from the dataset.
@@ -82,7 +98,13 @@ def jsonified():
 #   Use Flask jsonify to convert your API data into a valid JSON response object.
 
 
-
+#
+#
+#
+#
+#
+#
+#
 # more code that might be helpful?
 @app.route("/api/v1.0/justice-league")
 def justice_league():
@@ -106,21 +128,6 @@ def justice_league_character(real_name):
     return jsonify({"error": f"Character with real_name {real_name} not found."}), 404
 
 
-    @app.route("/api/v1.0/names")
-def names():
-    # Create our session (link) from Python to the DB
-    session = Session(engine)
-
-    """Return a list of all passenger names"""
-    # Query all passengers
-    results = session.query(Passenger.name).all()
-
-    session.close()
-
-    # Convert list of tuples into normal list
-    all_names = list(np.ravel(results))
-
-    return jsonify(all_names)
 
 
 @app.route("/api/v1.0/passengers")
@@ -148,4 +155,3 @@ def passengers():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
